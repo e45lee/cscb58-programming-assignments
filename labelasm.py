@@ -12,8 +12,8 @@ def eliminateLabels(code: list[LabeledAssemblyCode]) -> tuple[list[AssemblyCode]
 def assembleCode(code: list[LabeledAssemblyCode], out = sys.stdout.buffer):
     """ Assembles a List of LabeledAssemblyCode objects to the target file. """
     newCode, labels = eliminateLabels(code)
-    for (label, location) in labels:
-        print("label {0} => {1}".format(label, location), file = sys.stderr)
+    for label in labels:
+        print("label {0} => {1}".format(label, labels[label]), file=sys.stderr)
 
     assembleWords(lowerAssemblyCode(newCode))
 
