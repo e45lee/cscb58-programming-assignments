@@ -1,9 +1,8 @@
 from decl import *
 from type import *
-from expression import *
-from lvalue import *
-from statement import *
 from codetypes import *
+from exprstmt import *
+from labelasm import assembleCode
 
 
 type ExpressionTypes = dict[Expression|LValue, TType]

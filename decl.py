@@ -1,14 +1,12 @@
 from dataclasses import dataclass
 
-from expression import *
-from statement import *
+from exprstmt import *
 from type import TType
 
 @dataclass
 class VarDef:
     type: TType
     name: str
-
 
 @dataclass
 class Function:
