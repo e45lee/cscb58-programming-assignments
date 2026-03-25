@@ -1,3 +1,6 @@
+import argparse
+import importlib
+import sys
 from decl import *
 from type import *
 from codetypes import *
@@ -77,8 +80,24 @@ def generate(input_fs: list[Function], expr_types: ExpressionTypes, ftable: Symb
     return assembly_code
 
 
-def driver(intput_fs: list[Function]):
-    expr_types, ftable = typecheck(intput_fs)
-    asm_fns = generate(intput_fs, expr_types, ftable)
-    return map(assembleCode, asm_fns)
+def compileCode(input_fs: list[Function], output = sys.stdout.buffer):
+    expr_types, ftable = typecheck(input_fs)
+    asm_fns = generate(input_fs, expr_types, ftable)
+    concatAsm = [elem for sublist in asm_fns for elem in sublist]
+    assembleCode(concatAsm, output)
 
+if __name__ == "__main__":
+    if sys.platform == "win32":
+        import os, msvcrt
+        msvcrt.setmode(sys.stdout.fileno(  ), os.O_BINARY)
+
+    parser = argparse.ArgumentParser(
+                    prog="compiler",
+                    description="Assembles a sequence of Function objects")
+    parser.add_argument("filename")
+    args = parser.parse_args()
+    
+    spec = importlib.util.spec_from_file_location("code", args.filename)
+    code = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(code)
+    compileCode(code.CODE) 
