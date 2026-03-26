@@ -1,10 +1,12 @@
 from enum import Enum
 from dataclasses import dataclass
 
+
 class UnaryOp(Enum):
     Not = 0
     Negate = 1
     Address = 2
+
 
 class BinaryOp(Enum):
     Plus = 1
@@ -17,9 +19,11 @@ class BinaryOp(Enum):
     Eq = 8
     Ne = 9
 
+
 @dataclass
 class Statement:
     pass
+
 
 @dataclass
 class Expression(Statement):
@@ -35,15 +39,18 @@ class LValue:
 class VarTarget(LValue):
     name: str
 
+
 @dataclass(eq=False)
 class DerefTarget(LValue):
     address: Expression
+
 
 @dataclass(eq=False)
 class NULL:
     pass
 
 
+# Expressions
 @dataclass(eq=False)
 class BinExp(Expression):
     left: Expression
@@ -64,12 +71,19 @@ class Call(Expression):
 
 
 @dataclass(eq=False)
+class VarAccess(Expression):
+    target: str
+
+
+@dataclass(eq=False)
 class Constant(Expression):
     value: int | NULL
 
+
+# Statements
 @dataclass
 class Block(Statement):
-    body: list[Statement]
+    body: list[Statement|Expression]
 
 
 @dataclass
