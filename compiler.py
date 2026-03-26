@@ -20,40 +20,66 @@ class FunctionInformation:
 
 
 def typecheckNode(node, f_table: SymbolTable, f_current: FunctionInformation) -> ExpressionTypes:
+    # You may modify this function and its input arguments as you'd like, but its reccomended you stick to this format
     expr_types: ExpressionTypes = {}
 
     # TODO: Implement typechecking for each node type and add the types of expressions to expr_types
+    # The minimum required cases for the first checkpoint have been added for you
     match node:
         case Function():
+            # TODO: call typecheckNode on all parameters, local vars, the body, and the return expression
             pass
         case VarDef():
+            # TODO: add variable definition to the current function's variable table
             pass
-        case TType():
+        case Block():
+            # TODO: typcheck all contained statements/expressions
             pass
-        case Constant():
+        case Call():
+            # TODO: call typecheckNode on all arguments
+            # TODO: Check:
+            #       - called function is in f_table
+            #       - called function has same number of args as it's definition
+            #       - all arguments have the same type as the function definition
+            # and raise the relevant exception if one of the checks dont pass
             pass
-    # ...
+    # Add more cases for remaining node types...
     return expr_types
 
 
 def generateNode(node, expr_types: ExpressionTypes, f_table: SymbolTable, f_current: FunctionInformation) -> list[LabeledAssemblyCode]:
+    # You may modify this function, including the input arguments (if you want)
     assembly_code: list[LabeledAssemblyCode] = []
     
     # TODO: Implement assembly code generation for each node type and add the generated instructions to assembly_code
+    # The minimum required cases for the first checkpoint have been added for you
     match node:
         case Function():
             pass
         case VarDef():
             pass
-        case TType():
-            pass
         case Constant():
             pass
-    # ...
+        case VarAccess():
+            pass
+    # Add more cases for each node type...
     return assembly_code
 
 
 def typecheck(input_fs: list[Function]) -> tuple[ExpressionTypes, SymbolTable]:
+    '''Checks type constraints on an input program input_fs, which consists of a list of Function objects.
+
+    Args:
+        input_fs: list of Function objects representing the input program
+    
+    Returns:
+        A tuple (expr_types, f_table) where:
+            expr_types: a mapping from each expression and lvalue in the program to its type
+            f_table: a mapping from each function name to its parameter types, return type, and variable table
+     
+    Note:
+        Do not modify the input arguments to typecheck. You may modify the body as needed.
+    '''
     expr_types: ExpressionTypes = {}
     f_table: SymbolTable = {}
 
@@ -63,6 +89,8 @@ def typecheck(input_fs: list[Function]) -> tuple[ExpressionTypes, SymbolTable]:
         returnType: TType = TType.Int       # TODO: Initialize returnType
         f_table[function.name] = FunctionInformation(paramTypes, returnType, {})
     
+    # TODO: add the 5 builtin functions to the f_table
+    
     # Run typechecking on each function and add returned types to expr_types
     for function in input_fs:
         expr_types = expr_types | typecheckNode(function, f_table, f_table[function.name])
@@ -71,6 +99,19 @@ def typecheck(input_fs: list[Function]) -> tuple[ExpressionTypes, SymbolTable]:
 
 
 def generate(input_fs: list[Function], expr_types: ExpressionTypes, f_table: SymbolTable) -> list[list[LabeledAssemblyCode]]:
+    '''Generates assembly code for an input program input_fs, which consists of a list of Function objects.
+    
+    Args:
+        input_fs: list of Function objects representing the input program
+        expr_types: a mapping from each expression and lvalue in the program to its type
+        f_table: a mapping from each function name to its parameter types, return type, and variable table
+
+    Returns:
+        A list of lists of LabeledAssemblyCode, one list for each function in the input program, containing the generated assembly code for that function
+
+    Note:
+        Do not modify the input arguments to generate. You may modify the body as you'd like, but its not reccomended.
+    '''
     assembly_code: list[list[LabeledAssemblyCode]] = []
 
     # Generate each function's labeled assembly code
