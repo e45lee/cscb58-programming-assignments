@@ -1,10 +1,13 @@
 import argparse
 import importlib
+import importlib.util
 import sys
+
 from decl import *
 from type import *
 from codetypes import *
 from exprstmt import *
+from typecheck_errors import *
 from labelasm import assembleCode
 
 
@@ -20,11 +23,11 @@ class FunctionInformation:
 
 
 def typecheckNode(node, f_table: SymbolTable, f_current: FunctionInformation) -> ExpressionTypes:
-    # You may modify this function and its input arguments as you'd like, but its reccomended you stick to this format
-    expr_types: ExpressionTypes = {}
+    # You may modify this function and its input arguments as you'd like.
 
     # TODO: Implement typechecking for each node type and add the types of expressions to expr_types
     # The minimum required cases for the first checkpoint have been added for you
+    expr_types: ExpressionTypes = {}
     match node:
         case Function():
             # TODO: call typecheckNode on all parameters, local vars, the body, and the return expression
@@ -41,18 +44,18 @@ def typecheckNode(node, f_table: SymbolTable, f_current: FunctionInformation) ->
             #       - called function is in f_table
             #       - called function has same number of args as it's definition
             #       - all arguments have the same type as the function definition
-            # and raise the relevant exception if one of the checks dont pass
+            # and raise the relevant exception if one of the checks dont pass (see typecheck_errors.py)
             pass
     # Add more cases for remaining node types...
     return expr_types
 
 
 def generateNode(node, expr_types: ExpressionTypes, f_table: SymbolTable, f_current: FunctionInformation) -> list[LabeledAssemblyCode]:
-    # You may modify this function, including the input arguments (if you want)
-    assembly_code: list[LabeledAssemblyCode] = []
-    
+    # You may modify this function and its input arguments as you'd like.
+
     # TODO: Implement assembly code generation for each node type and add the generated instructions to assembly_code
     # The minimum required cases for the first checkpoint have been added for you
+    assembly_code: list[LabeledAssemblyCode] = []
     match node:
         case Function():
             pass
@@ -76,6 +79,9 @@ def typecheck(input_fs: list[Function]) -> tuple[ExpressionTypes, SymbolTable]:
         A tuple (expr_types, f_table) where:
             expr_types: a mapping from each expression and lvalue in the program to its type
             f_table: a mapping from each function name to its parameter types, return type, and variable table
+
+    Raises:
+        TypeCheckError
      
     Note:
         Do not modify the input arguments to typecheck. You may modify the body as needed.
@@ -123,10 +129,13 @@ def generate(input_fs: list[Function], expr_types: ExpressionTypes, f_table: Sym
 
 
 def compileCode(input_fs: list[Function], output = sys.stdout.buffer):
-    expr_types, f_table = typecheck(input_fs)
-    asm_fns = generate(input_fs, expr_types, f_table)
-    concatAsm = [elem for sublist in asm_fns for elem in sublist]
-    assembleCode(concatAsm, output)
+    try:
+        expr_types, f_table = typecheck(input_fs)
+        asm_fns = generate(input_fs, expr_types, f_table)
+        concatAsm = [elem for sublist in asm_fns for elem in sublist]
+        assembleCode(concatAsm, output)
+    except TypeCheckError as tc_err:
+        print(f"TypeCheck error raised: {tc_err}")
 
 if __name__ == "__main__":
     if sys.platform == "win32":
@@ -140,6 +149,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     spec = importlib.util.spec_from_file_location("code", args.filename)
+    assert(not spec is None and not spec.loader is None)
     code = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(code)
-    compileCode(code.CODE) 
+    compileCode(code.FUNCS) 

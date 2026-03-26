@@ -44,6 +44,7 @@ class VarTarget(LValue):
 class DerefTarget(LValue):
     address: Expression
 
+
 @dataclass(eq=False)
 class NULL:
     pass
@@ -76,7 +77,7 @@ class VarAccess(Expression):
 
 @dataclass(eq=False)
 class Constant(Expression):
-    value: int | NULL
+    value: int | NULL | bool
 
 
 # Statements
