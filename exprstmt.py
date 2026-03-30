@@ -10,7 +10,7 @@ class UnaryOp(Enum):
 
 class BinaryOp(Enum):
     Plus = 1
-    Minus = 2
+    Multiply = 2
     Subtract = 3
     Divide = 4
     Ge = 5
