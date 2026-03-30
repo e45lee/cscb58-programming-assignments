@@ -20,12 +20,12 @@ class BinaryOp(Enum):
     Ne = 9
 
 
-@dataclass
+@dataclass(eq=False)
 class Statement:
     pass
 
 
-@dataclass
+@dataclass(eq=False)
 class Expression(Statement):
     pass
 
