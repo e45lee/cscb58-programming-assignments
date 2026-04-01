@@ -4,12 +4,12 @@ import sys
 from codetypes import *
 from wordasm import *
 
-def eliminateLabels(code: list[LabeledAssemblyCode]) -> tuple[list[AssemblyCode], dict[str, int]]:
+def eliminateLabels(code: list[LabeledAssemblyCode | AssemblyCode]) -> tuple[list[AssemblyCode], dict[str, int]]:
     """ Lowers away LabeledAssemblyCode instructions. Returns a tuple of AssemblyCode and
         a dictionary mapping label definitions to addresses."""
     return (code, {})
 
-def assembleCode(code: list[LabeledAssemblyCode], out = sys.stdout.buffer):
+def assembleCode(code: list[LabeledAssemblyCode | AssemblyCode], out = sys.stdout.buffer):
     """ Assembles a List of LabeledAssemblyCode objects to the target file. """
     newCode, labels = eliminateLabels(code)
     for label in labels:

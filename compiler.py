@@ -50,12 +50,12 @@ def typecheckNode(node, f_table: SymbolTable, f_current: FunctionInformation) ->
     return expr_types
 
 
-def generateNode(node, expr_types: ExpressionTypes, f_table: SymbolTable, f_current: FunctionInformation) -> list[LabeledAssemblyCode]:
+def generateNode(node, expr_types: ExpressionTypes, f_table: SymbolTable, f_current: FunctionInformation) -> list[LabeledAssemblyCode | AssemblyCode]:
     # You may modify this function and its input arguments as you'd like.
 
     # TODO: Implement assembly code generation for each node type and add the generated instructions to assembly_code
     # The minimum required cases for the first checkpoint have been added for you
-    assembly_code: list[LabeledAssemblyCode] = []
+    assembly_code: list[LabeledAssemblyCode | AssemblyCode] = []
     match node:
         case Function():
             pass
@@ -104,7 +104,7 @@ def typecheck(input_fs: list[Function]) -> tuple[ExpressionTypes, SymbolTable]:
     return (expr_types, f_table)
 
 
-def generate(input_fs: list[Function], expr_types: ExpressionTypes, f_table: SymbolTable) -> list[list[LabeledAssemblyCode]]:
+def generate(input_fs: list[Function], expr_types: ExpressionTypes, f_table: SymbolTable) -> list[list[LabeledAssemblyCode | AssemblyCode]]:
     '''Generates assembly code for an input program input_fs, which consists of a list of Function objects.
     
     Args:
@@ -118,7 +118,7 @@ def generate(input_fs: list[Function], expr_types: ExpressionTypes, f_table: Sym
     Note:
         Do not modify the input arguments to generate. You may modify the body as you'd like, but its not reccomended.
     '''
-    assembly_code: list[list[LabeledAssemblyCode]] = []
+    assembly_code: list[list[LabeledAssemblyCode | AssemblyCode]] = []
 
     # Generate each function's labeled assembly code
     for function in input_fs:
