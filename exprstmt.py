@@ -77,6 +77,10 @@ class VarAccess(Expression):
 class DerefAccess(Expression):
     address: Expression
 
+@dataclass(eq=False)
+class AddressOf(Expression):
+    target: LValue
+
 
 @dataclass(eq=False)
 class Constant(Expression):
