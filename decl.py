@@ -16,7 +16,6 @@ class Function:
     name: str
     parameters: list[VarDef]
 
-    local_vars: list[VarDef]
+    variables: list[tuple[VarDef, Constant]]
     body: Statement
     retExpr: Expression
-
